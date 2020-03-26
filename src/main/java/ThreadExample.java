@@ -5,11 +5,12 @@ public class ThreadExample {
 
     public static void main(String[] args) {
 
-
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
         executorService.submit(() -> numbers());
         executorService.submit(() -> numbers());
+        executorService.shutdownNow();
+        executorService.shutdown();
 
     }
 
