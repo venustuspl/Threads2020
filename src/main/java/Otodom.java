@@ -2,14 +2,34 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Otodom {
 
     public static void main(String[] args) throws IOException {
 
-        URL otodom = new URL("https://www.otodom.pl/sprzedaz/mieszkanie/kobylka/");
+
+        Set<String> setOfLinks = new TreeSet<>();
+        String content = stringBuilder.toString();
+
+        for (int i = 0; i < content.length(); i++) {
+            i = content.indexOf("https://www.otodom.pl/oferta/", i);
+            if (i < 0)
+                break;
+            String substring = content.substring(i);
+            String link = substring.split(".html")[0];
+            setOfLinks.add(link);
+
+        }
+
+        setOfLinks.forEach(System.out::println);
+        System.out.println(setOfLinks.size());
+    }
+
+    public static void readWebside(String link) throws IOException {
+
+        URL otodom = new URL(link);
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(otodom.openStream()));
 
@@ -22,21 +42,5 @@ public class Otodom {
         }
 
         in.close();
-
-        List<String> listOfLinks = new ArrayList<>();
-        String content = stringBuilder.toString();
-
-        for (int i = 0; i < content.length(); i++) {
-            i = content.indexOf("https://www.otodom.pl/oferta/", i);
-            if (i < 0)
-                break;
-            String substring = content.substring(i);
-            String link = substring.split(".html")[0];
-            listOfLinks.add(link);
-
-        }
-
-        System.out.println(listOfLinks);
-
     }
 }
