@@ -1,10 +1,15 @@
 import java.io.*;
 import java.net.URL;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Otodom {
 
     public static void main(String[] args) throws IOException {
 
+        ExecutorService executorService = Executors.newFixedThreadPool(30);
         URL otodom = new URL("https://www.otodom.pl/sprzedaz/mieszkanie/kobylka/");
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(otodom.openStream()));
@@ -17,7 +22,7 @@ public class Otodom {
             stringBuilder.append(System.lineSeparator());
         }
         in.close();
-
+        Set<String> strings = new TreeSet<>();
         String content = stringBuilder.toString();
 
         for (int i = 0; i < content.length(); i++) {
@@ -26,11 +31,20 @@ public class Otodom {
                 break;
             String substring = content.substring(i);
             String link = substring.split(".html")[0];
-
-            readWebside(link, i + ".html");
-
+            strings.add(link);
+        }
+        for (int i = 0; i < strings.size(); i++) {
+            int finalI = i;
+            executorService.submit(() -> {
+                try {
+                    readWebside(strings.toArray()[finalI].toString(), finalI + ".html");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
+        executorService.shutdownNow();
     }
 
     public static void readWebside(String link, String fileName) throws IOException {
