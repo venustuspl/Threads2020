@@ -9,7 +9,7 @@ public class Otodom {
 
     public static void main(String[] args) throws IOException {
 
-        ExecutorService executorService = Executors.newFixedThreadPool(30);
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
         URL otodom = new URL("https://www.otodom.pl/sprzedaz/mieszkanie/kobylka/");
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(otodom.openStream()));
